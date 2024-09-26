@@ -35,8 +35,8 @@ interactive:
 	rasa interactive -d data/basic/data -m models/ops-pilot.tar.gz
 
 release:
-	docker build -t ccr.ccs.tencentyun.com/megalab/ops-pilot .
-	docker push ccr.ccs.tencentyun.com/megalab/ops-pilot
+	docker build -t etherfurnace/ops-pilot .
+	docker push etherfurnace/ops-pilot
 
 valid:
 	rasa data split nlu -u data/
