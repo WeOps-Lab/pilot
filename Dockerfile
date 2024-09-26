@@ -1,16 +1,21 @@
-FROM python:3.10
+FROM ubuntu:22.04
+
+RUN apt-get update && \
+    apt-get install -y libhdf5-dev vim python3 python3-pip unzip curl pkg-config libssl-dev libffi-dev supervisor && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 WORKDIR /apps
 
-ADD ./requirements.in ./requirements.in
-RUN pip install -r requirements.in
+ADD ./requirements ./requirements
+RUN pip install -r requirements/requirements.txt
 
 ADD ./actions ./actions
-ADD ./cache ./cache
 ADD ./channels ./channels
 ADD ./compoments ./compoments
 ADD ./libs ./libs
 ADD ./utils ./utils
-ADD ./ops_pilot_cli.py ./ops_pilot_cli.py
+ADD ./cli.py ./cli.py
 ADD ./core ./core
 ADD ./eventbus ./eventbus
 ADD ./integrations ./integrations
