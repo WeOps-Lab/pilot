@@ -23,7 +23,7 @@ class BootStrap(object):
         }
 
         response = requests.get(
-            server_settings.munchkin_base_url + f'/api/bot/{server_settings.munchkin_bot_id}',
+            server_settings.munchkin_base_url + f'/bot_mgmt/bot/{server_settings.munchkin_bot_id}/',
             headers={
                 'Authorization': f'TOKEN {server_settings.munchkin_api_key}',
                 'Content-Type': 'application/json'
@@ -43,7 +43,7 @@ class BootStrap(object):
                 'url': 'http://localhost:5055/webhook',
             },
             'models': {
-                'url': f'{server_settings.munchkin_base_url}/api/rasa_model/model_download?bot_id={server_settings.munchkin_bot_id}',
+                'url': f'{server_settings.munchkin_base_url}/bot_mgmt/rasa_model/model_download/?bot_id={server_settings.munchkin_bot_id}',
                 'wait_time_between_pulls': None,
             },
             'tracker_store': {
