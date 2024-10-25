@@ -23,7 +23,7 @@ class BootStrap(object):
         }
 
         response = requests.get(
-            server_settings.munchkin_base_url + f'/bot_mgmt/bot/{server_settings.munchkin_bot_id}/',
+            server_settings.munchkin_base_url + f'/bot_mgmt/bot/{server_settings.munchkin_bot_id}/get_detail/',
             headers={
                 'Authorization': f'TOKEN {server_settings.munchkin_api_key}',
                 'Content-Type': 'application/json'
