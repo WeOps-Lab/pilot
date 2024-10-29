@@ -43,7 +43,7 @@ class BootStrap(object):
                 'url': 'http://localhost:5055/webhook',
             },
             'models': {
-                'url': f'{server_settings.munchkin_base_url}/bot_mgmt/rasa_model/model_download/?bot_id={server_settings.munchkin_bot_id}',
+                'url': f'{server_settings.munchkin_base_url}/bot_mgmt/rasa_model_download/?bot_id={server_settings.munchkin_bot_id}',
                 'wait_time_between_pulls': None,
             },
             'tracker_store': {
