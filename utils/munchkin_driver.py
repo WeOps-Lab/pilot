@@ -32,7 +32,7 @@ class MunchkinDriver:
         logger.info(
             f"执行[{action_name}]动作,发送者ID:[{sender_id}],消息: {user_message},联网搜索开关: {enable_online_search}")
 
-        result = requests.post(server_settings.munchkin_base_url + '/api/bot/skill_execute', data=json.dumps(
+        result = requests.post(server_settings.munchkin_base_url + '/bot_mgmt/skill_execute/', data=json.dumps(
             {
                 "bot_id": server_settings.munchkin_bot_id,
                 "skill_id": action_name,
