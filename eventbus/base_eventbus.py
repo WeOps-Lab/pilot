@@ -44,6 +44,7 @@ class BaseEventBus:
         :param messages:
         :return:
         """
+        logger.info(f"Publishing messages to event bus..., {messages}")
         connection, channel = self.prepare_eventbus()
 
         properties = pika.BasicProperties(delivery_mode=2, expiration=str(5 * 60 * 1000))
