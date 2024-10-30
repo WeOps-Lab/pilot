@@ -61,7 +61,8 @@ class BootStrap(object):
                 'password': server_settings.rabbitmq_password,
                 'queues': [
                     'pilot'
-                ]
+                ],
+                'bot_id': str(server_settings.munchkin_bot_id)
             }
         }
         with open('data/endpoints.yml', 'w', encoding='utf-8') as f:
