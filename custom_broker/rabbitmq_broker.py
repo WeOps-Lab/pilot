@@ -19,6 +19,6 @@ class RabbitMQEventBroker(PikaEventBroker):
                  retry_delay_in_seconds: float = 5,
                  exchange_name: Text = RABBITMQ_EXCHANGE,
                  **kwargs: Any, ):
+        logger.info("RabbitMQEventBroker init")
         super().__init__(host, username, password, port, queues, should_keep_unpublished_messages, raise_on_failure,
                          event_loop, connection_attempts, retry_delay_in_seconds, exchange_name, **kwargs)
-        logger.info("RabbitMQEventBroker init success")
