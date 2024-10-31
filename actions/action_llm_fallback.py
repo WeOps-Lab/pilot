@@ -33,11 +33,7 @@ class ActionLLMFallback(Action):
             if tracker.latest_message['text'] != '':
                 result = munchkin.chat('action_llm_fallback', tracker.latest_message['text'], converation_history,
                                        tracker.sender_id, enable_online_search)
-                dispatcher.utter_message(
-                    text=result,
-                    json_message={"bot_id": server_settings.munchkin_bot_id},
-                    bot_id=server_settings.munchkin_bot_id
-                )
+                dispatcher.utter_message(text=result)
                 RasaUtils.log_info(tracker, f"返回的信息为:{result}")
             return []
 
