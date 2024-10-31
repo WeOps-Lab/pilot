@@ -64,14 +64,13 @@ class BootStrap(object):
             #     ]
             # }
             'event_broker': {
-                'type': 'custom',
                 'url': 'rabbitmq-service',
                 'username': server_settings.rabbitmq_username,
                 'password': server_settings.rabbitmq_password,
                 'queues': [
                     'pilot'
                 ],
-                'path': "custom_broker.rabbitmq_broker.RabbitMQEventBroker"
+                'type': "custom_broker.rabbitmq_broker.RabbitMQEventBroker"
             }
         }
         with open('data/endpoints.yml', 'w', encoding='utf-8') as f:
