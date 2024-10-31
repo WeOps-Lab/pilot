@@ -4,6 +4,8 @@ from typing import Optional, Text, Union, Any, List, Tuple
 from loguru import logger
 from rasa.core.brokers.pika import PikaEventBroker, RABBITMQ_EXCHANGE
 
+from core.server_settings import server_settings
+
 
 class RabbitMQEventBroker(PikaEventBroker):
     def __init__(self,
@@ -19,6 +21,10 @@ class RabbitMQEventBroker(PikaEventBroker):
                  retry_delay_in_seconds: float = 5,
                  exchange_name: Text = RABBITMQ_EXCHANGE,
                  **kwargs: Any, ):
-        logger.info("RabbitMQEventBroker init")
         super().__init__(host, username, password, port, queues, should_keep_unpublished_messages, raise_on_failure,
                          event_loop, connection_attempts, retry_delay_in_seconds, exchange_name, **kwargs)
+
+    def publish(self, event, headers=None):
+        event["bot_id"] = server_settings.munchkin_bot_id
+        super().publish(event, headers)
+        logger.info(f"RabbitMQEventBroker publish event: {event}")
