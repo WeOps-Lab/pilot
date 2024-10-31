@@ -17,6 +17,7 @@ ADD ./libs ./libs
 ADD ./utils ./utils
 ADD ./cli.py ./cli.py
 ADD ./core ./core
+ADD ./custom_broker ./custom_broker
 ADD ./eventbus ./eventbus
 ADD ./support-files/supervisor/ops-pilot.conf /etc/supervisor/conf.d/ops-pilot.conf
 ADD ./support-files/supervisor/ops-pilot-action.conf /etc/supervisor/conf.d/ops-pilot-action.conf
