@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=42", "setuptools_scm[toml]>=6.0.1", "wheel", "nuitka"]
+build-backend = "nuitka.distutils.Build"
+
+[tool.nuitka]
+nofollow-import-to = ["*.tests", "*.distutils"]
+
+[project]
+name = "pilot"
+description = ""
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+version = "3.0.0"
+authors = [{ name = "umaru", email = "529280602@qq.com" }]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "rasa==3.6.20",
+    "python-dotenv==1.0.1",
+    "jieba==0.42.1",
+    "loguru==0.7.2",
+    "pika==1.3.2",
+    "transformers==4.41.0",
+    "wechatpy==1.8.18",
+]
+
+[tool.setuptools.packages.find]
+include = [
+    "actions",
+    "channels",
+    "compoments",
+    "core",
+    "custom_broker",
+    "eventbus",
+    "libs",
+    "utils",
+]
+
+
+[project.optional-dependencies]
+dev = ["twine==5.1.1", "pre-commit==4.0.1", "pytest==8.3.3"]
