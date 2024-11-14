@@ -7,7 +7,8 @@ RUN apt-get update && \
 
 WORKDIR /apps
 
-ADD ./requirements ./requirements
+RUN pip install pip-tools
+RUN pip-compile --extra dev -v
 RUN pip install -r requirements/requirements.txt
 
 ADD ./actions ./actions
