@@ -10,7 +10,7 @@ WORKDIR /apps
 ADD ./pyproject.toml ./pyproject.toml
 RUN pip install pip-tools
 RUN pip-compile --extra dev -v
-RUN pip install -r requirements/requirements.txt
+RUN pip install -r requirements.txt
 
 ADD ./actions ./actions
 ADD ./channels ./channels
