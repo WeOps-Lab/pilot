@@ -32,7 +32,7 @@ class ActionLLMFallback(Action):
         try:
             if tracker.latest_message['text'] != '':
                 result = munchkin.chat('action_llm_fallback', tracker.latest_message['text'], converation_history,
-                                       tracker.sender_id, enable_online_search)
+                                       tracker.sender_id, enable_online_search, tracker.get_latest_input_channel())
                 dispatcher.utter_message(text=result)
                 RasaUtils.log_info(tracker, f"返回的信息为:{result}")
             return []

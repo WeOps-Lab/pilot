@@ -27,10 +27,11 @@ class MunchkinDriver:
         }).json()
         return result
 
-    def chat(self, action_name, user_message, chat_history, sender_id='', enable_online_search=False):
+    def chat(self, action_name, user_message, chat_history, sender_id='', enable_online_search=False, channel='socketio'):
         chat_history = chat_history[:server_settings.chatgpt_model_max_history]
         logger.info(
-            f"执行[{action_name}]动作,发送者ID:[{sender_id}],消息: {user_message},联网搜索开关: {enable_online_search}")
+            f"执行[{action_name}]动作,通道:[{channel}],发送者ID:[{sender_id}],消息: {user_message}"
+        )
 
         result = requests.post(server_settings.munchkin_base_url + '/bot_mgmt/skill_execute/', data=json.dumps(
             {
@@ -39,7 +40,8 @@ class MunchkinDriver:
                 "sender_id": sender_id,
                 "user_message": user_message,
                 "chat_history": chat_history,
-                "enable_online_search": enable_online_search
+                "enable_online_search": enable_online_search,
+                "channel": channel
             }
         ), headers={
             "Authorization": f"TOKEN {server_settings.munchkin_api_key}",
