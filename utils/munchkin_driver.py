@@ -47,5 +47,4 @@ class MunchkinDriver:
             "Authorization": f"TOKEN {server_settings.munchkin_api_key}",
             "Content-Type": "application/json"
         }).json()
-        logger.info(f"回答结果： {result}")
         return result['result']
