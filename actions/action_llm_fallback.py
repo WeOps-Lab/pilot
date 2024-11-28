@@ -34,12 +34,12 @@ class ActionLLMFallback(Action):
                 result = munchkin.chat('action_llm_fallback', tracker.latest_message['text'], converation_history,
                                        tracker.sender_id, enable_online_search, tracker.get_latest_input_channel())
                 dispatcher.utter_message(
-                    text=result["content"], json_message={"citing_knowledge": result.get("citing_knowledge", [])}
+                    text=result["content"], other_data={"citing_knowledge": result.get("citing_knowledge", [])}
                 )
                 RasaUtils.log_info(tracker, f"返回的信息为:{result['content']}")
             return []
 
         except Exception as e:
             RasaUtils.log_error(tracker, f"请求服务异常:{e},用户输入的信息为:{tracker.latest_message['text']}")
-            dispatcher.utter_message(text="OpsPilot服务异常，请稍后重试", json_message={"citing_knowledge": []})
+            dispatcher.utter_message(text="OpsPilot服务异常，请稍后重试", other_data={"citing_knowledge": []})
             return [UserUtteranceReverted()]
