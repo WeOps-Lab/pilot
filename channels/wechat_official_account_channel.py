@@ -26,7 +26,7 @@ logger = getLogger(__name__)
 
 class WechatOfficialAccountChannel(InputChannel):
     def name(self) -> Text:
-        return "wechat_official_account_channel"
+        return "wechat_official_account"
 
     def __init__(self, appid, secret, token, aes_key, enable_eventbus) -> None:
         super().__init__()
