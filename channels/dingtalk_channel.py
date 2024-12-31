@@ -60,7 +60,7 @@ class DingTalkChannel(InputChannel):
     def name(self) -> Text:
         return "dingtalk_channel"
 
-    def recieve_event(self, event):
+    def receive_event(self, event):
         if self.event_bus.is_notification_event(event):
             reply_user_id = self.event_bus.get_notification_event_sender_id(event)
             reply_text = self.event_bus.get_notification_event_content(event)
@@ -76,7 +76,7 @@ class DingTalkChannel(InputChannel):
 
         if self.enable_eventbus:
             self.event_bus = NotificationEventBus()
-            self.event_bus.consume('enterprise_wechat_bot_channel', self.recieve_event)
+            self.event_bus.consume('enterprise_wechat_bot_channel', self.receive_event)
 
         logger.info('钉钉机器人通道已启动')
 
