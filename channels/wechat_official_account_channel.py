@@ -152,6 +152,7 @@ class WechatOfficialAccountChannel(InputChannel):
 
         @wechat_official_account_hook.route("/", methods=["POST"])
         async def msg_entry(request: Request) -> HTTPResponse:
+            logger.info(f"msg_entry: {request.body}")
             xml_msg = xmltodict.parse(to_text(request.body))['xml']
             decode_msg = self.decrypt(xml_msg['Encrypt'])
             message = parse_message(decode_msg)
