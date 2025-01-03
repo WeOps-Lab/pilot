@@ -91,7 +91,7 @@ class WechatOfficialAccountChannel(InputChannel):
         return cls(
             credentials.get("appid"),
             credentials.get("secret"),
-            credentials.get("token"),
+            str(credentials.get("token")),
             credentials.get("aes_key"),
             credentials.get("enable_eventbus", False),
         )
@@ -145,7 +145,7 @@ class WechatOfficialAccountChannel(InputChannel):
             echostr = request.args.get('echostr')
 
             logger.info(
-                f'Enterprise WeChat verification: msg_signature:{signature}, timestamp:{timestamp}, nonce:{nonce}, echostr:{echostr}')
+                f'WeChat verification: msg_signature:{signature}, timestamp:{timestamp}, nonce:{nonce}, echostr:{echostr}')
 
             check_signature(self.token, signature, timestamp, nonce)
             return response.text(echostr)
