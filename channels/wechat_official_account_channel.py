@@ -132,12 +132,12 @@ class WechatOfficialAccountChannel(InputChannel):
     def blueprint(
             self, on_new_message: Callable[[UserMessage], Awaitable[None]]
     ) -> Blueprint:
-        enterprise_wechathook = Blueprint(
-            f"enterprise_wechat_hook_{type(self).__name__}",
+        wechat_official_account_hook = Blueprint(
+            f"wechat_official_account_hook_{type(self).__name__}",
             inspect.getmodule(self).__name__,
         )
 
-        @enterprise_wechathook.route("/", methods=["GET"])
+        @wechat_official_account_hook.route("/", methods=["GET"])
         async def index(request: Request) -> HTTPResponse:
             signature = request.args.get('signature')
             timestamp = request.args.get('timestamp')
@@ -150,7 +150,7 @@ class WechatOfficialAccountChannel(InputChannel):
             echo_str = check_signature(self.token, signature, timestamp, nonce)
             return response.text(echo_str)
 
-        @enterprise_wechathook.route("/", methods=["POST"])
+        @wechat_official_account_hook.route("/", methods=["POST"])
         async def msg_entry(request: Request) -> HTTPResponse:
             xml_msg = xmltodict.parse(to_text(request.body))['xml']
             decode_msg = self.decrypt(xml_msg['Encrypt'])
@@ -162,4 +162,4 @@ class WechatOfficialAccountChannel(InputChannel):
                     message.source,
                 ))
             return HTTPResponse(body="")
-        return enterprise_wechathook
+        return wechat_official_account_hook
