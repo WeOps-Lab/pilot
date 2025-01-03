@@ -147,8 +147,8 @@ class WechatOfficialAccountChannel(InputChannel):
             logger.info(
                 f'Enterprise WeChat verification: msg_signature:{signature}, timestamp:{timestamp}, nonce:{nonce}, echostr:{echostr}')
 
-            echo_str = check_signature(self.token, signature, timestamp, nonce)
-            return response.text(echo_str)
+            check_signature(self.token, signature, timestamp, nonce)
+            return response.text(echostr)
 
         @wechat_official_account_hook.route("/", methods=["POST"])
         async def msg_entry(request: Request) -> HTTPResponse:
