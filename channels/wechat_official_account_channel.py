@@ -17,7 +17,8 @@ from sanic import Blueprint, response
 from sanic.request import Request
 from sanic.response import HTTPResponse
 from wechatpy import WeChatClient, parse_message
-from wechatpy.utils import check_signature, to_text
+from wechatpy.crypto import PrpCrypto
+from wechatpy.utils import check_signature, to_text, to_binary
 
 from eventbus.notification_eventbus import NotificationEventBus
 
@@ -34,10 +35,9 @@ class WechatOfficialAccountChannel(InputChannel):
         self.appid = appid
         self.secret = secret
         self.token = token
-        self.aes_key = base64.b64decode(aes_key + "=")
+        encoding_aes_key = to_binary(aes_key + '=')
+        self.key = base64.b64decode(encoding_aes_key)
         logger.info(f"WechatOfficialAccountChannel init called，app_id={appid}, secret={secret}, token={token}, aes_key={aes_key}")
-        # self.crypto = WeChatCrypto(token, aes_key, appid)
-
         self.wechat_client = WeChatClient(
             appid,
             secret
@@ -75,16 +75,8 @@ class WechatOfficialAccountChannel(InputChannel):
         logger.debug(f'投递消息成功,目标用户[{reply_user_id}]')
 
     def decrypt(self, msg_encrypt):
-        try:
-            cipher = AES.new(self.aes_key, AES.MODE_CBC, self.aes_key[:16])
-            ciphertext_decoded = base64.b64decode(msg_encrypt)
-            plaintext_padded = cipher.decrypt(ciphertext_decoded)
-            plaintext = unpad(plaintext_padded, AES.block_size)
-            xml_len = int.from_bytes(plaintext[16:20], byteorder='big')
-            xml_content = plaintext[20:20 + xml_len].decode('utf-8')
-            return xml_content
-        except Exception as e:
-            return None
+        pc = PrpCrypto(self.key)
+        return pc.decrypt(msg_encrypt, self.appid)
 
     @classmethod
     def from_credentials(cls, credentials: Optional[Dict[Text, Any]]) -> "InputChannel":
