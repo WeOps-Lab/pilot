@@ -37,7 +37,6 @@ class WechatOfficialAccountChannel(InputChannel):
         self.token = token
         encoding_aes_key = to_binary(aes_key + '=')
         self.key = base64.b64decode(encoding_aes_key)
-        logger.info(f"WechatOfficialAccountChannel init called，app_id={appid}, secret={secret}, token={token}, aes_key={aes_key}")
         self.wechat_client = WeChatClient(
             appid,
             secret
@@ -68,8 +67,8 @@ class WechatOfficialAccountChannel(InputChannel):
         reply_text_list = reply_text.split("\n")
 
         # 30行一个batch进行发送
-        for i in range(0, len(reply_text_list), 50):
-            msg = "\n".join(reply_text_list[i:i + 50])
+        for i in range(0, len(reply_text_list), 10):
+            msg = "\n".join(reply_text_list[i:i + 10])
             self.wechat_client.message.send_markdown(reply_user_id, msg)
 
         logger.debug(f'投递消息成功,目标用户[{reply_user_id}]')
@@ -144,7 +143,6 @@ class WechatOfficialAccountChannel(InputChannel):
 
         @wechat_official_account_hook.route("/", methods=["POST"])
         async def msg_entry(request: Request) -> HTTPResponse:
-            logger.info(f"msg_entry: {request.body}")
             xml_msg = xmltodict.parse(to_text(request.body))['xml']
             decode_msg = self.decrypt(xml_msg['Encrypt'])
             message = parse_message(decode_msg)
