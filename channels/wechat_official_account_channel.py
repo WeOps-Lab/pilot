@@ -35,7 +35,7 @@ class WechatOfficialAccountChannel(InputChannel):
         self.secret = secret
         self.token = token
         self.aes_key = base64.b64decode(aes_key + "=")
-
+        logger.info(f"WechatOfficialAccountChannel init called， app_id={appid}, secret={secret}, token={token}, aes_key={aes_key}")
         # self.crypto = WeChatCrypto(token, aes_key, appid)
 
         self.wechat_client = WeChatClient(
