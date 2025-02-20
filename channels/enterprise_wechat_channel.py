@@ -20,6 +20,9 @@ logger = getLogger(__name__)
 
 
 class EnterpriseWechatChannel(InputChannel):
+    # 企业微信单条消息最大长度（以字符计）
+    MAX_MESSAGE_LENGTH = 2048
+
     def name(self) -> Text:
         return "enterprise_wechat"
 
@@ -46,6 +49,23 @@ class EnterpriseWechatChannel(InputChannel):
             self.event_bus = NotificationEventBus()
             self.event_bus.consume(queue_name, self.process_event)
 
+    def _send_message_chunks(self, user_id, text: str):
+        """分片发送较长的消息"""
+        if not text:
+            return
+        
+        if len(text) <= self.MAX_MESSAGE_LENGTH:
+            self.wechat_client.message.send_markdown(self.agent_id, user_id, text)
+            return
+
+        # 按最大长度切分消息
+        start = 0
+        while start < len(text):
+            end = start + self.MAX_MESSAGE_LENGTH
+            chunk = text[start:end]
+            self.wechat_client.message.send_markdown(self.agent_id, user_id, chunk)
+            start = end
+
     def process_event(self, event):
         # 接收到不属于通知类型的消息
         if self.event_bus.is_notification_event(event) is False:
@@ -60,13 +80,13 @@ class EnterpriseWechatChannel(InputChannel):
 
         logger.info(f"收到消息总线通知,目标用户:[{reply_user_id}],内容:[{reply_text}]")
 
-        reply_text = reply_text.strip()
+        reply_text = reply_text.strip().replace("\r", "\n")
         reply_text_list = reply_text.split("\n")
 
         # 30行一个batch进行发送
         for i in range(0, len(reply_text_list), 50):
             msg = "\n".join(reply_text_list[i:i + 50])
-            self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, msg)
+            self._send_message_chunks(reply_user_id, msg)
 
         logger.debug(f'投递消息成功,目标用户[{reply_user_id}]')
 
@@ -106,11 +126,11 @@ class EnterpriseWechatChannel(InputChannel):
                 "\n\n".join(data["text"] for data in response_data)
                 .replace("bot:", "")
                 .strip()
-            )
+            ).replace("\r", "\n")
             reply_text_list = reply_text.split("\n")
             for i in range(0, len(reply_text_list), 50):
                 msg = "\n".join(reply_text_list[i:i + 50])
-                self.wechat_client.message.send_markdown(self.agent_id, reply_user_id, msg)
+                self._send_message_chunks(reply_user_id, msg)
         except Exception as error:
             logger.error(error)
 

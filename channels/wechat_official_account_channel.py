@@ -26,6 +26,7 @@ logger = getLogger(__name__)
 
 
 class WechatOfficialAccountChannel(InputChannel):
+    MAX_MESSAGE_LENGTH = 1024
     def name(self) -> Text:
         return "wechat_official_account"
 
@@ -49,6 +50,22 @@ class WechatOfficialAccountChannel(InputChannel):
             self.event_bus = NotificationEventBus()
             self.event_bus.consume(queue_name, self.process_event)
 
+    def _send_message_chunks(self, user_id, text: str):
+        """分片发送较长的消息"""
+        if not text:
+            return
+
+        if len(text) <= self.MAX_MESSAGE_LENGTH:
+            self.wechat_client.message.send_text(user_id, text)
+            return
+
+        # 按最大长度切分消息
+        start = 0
+        while start < len(text):
+            end = start + self.MAX_MESSAGE_LENGTH
+            chunk = text[start:end]
+            self.wechat_client.message.send_text(user_id, chunk)
+            start = end
     def process_event(self, event):
         # 接收到不属于通知类型的消息
         if self.event_bus.is_notification_event(event) is False:
@@ -69,7 +86,8 @@ class WechatOfficialAccountChannel(InputChannel):
         # 30行一个batch进行发送
         for i in range(0, len(reply_text_list), 10):
             msg = "\n".join(reply_text_list[i:i + 10])
-            self.wechat_client.message.send_markdown(reply_user_id, msg)
+            self._send_message_chunks(reply_user_id, msg)
+            # self.wechat_client.message.send_markdown(reply_user_id, msg)
 
         logger.debug(f'投递消息成功,目标用户[{reply_user_id}]')
 
@@ -116,7 +134,8 @@ class WechatOfficialAccountChannel(InputChannel):
             reply_text_list = reply_text.split("\n")
             for i in range(0, len(reply_text_list), 50):
                 msg = "\n".join(reply_text_list[i:i + 50])
-                self.wechat_client.message.send_text(reply_user_id, msg)
+                self._send_message_chunks(reply_user_id, msg)
+                # self.wechat_client.message.send_text(reply_user_id, msg)
         except Exception as error:
             logger.error(error)
 
