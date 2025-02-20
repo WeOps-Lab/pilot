@@ -3,7 +3,7 @@ import inspect
 import os
 from logging import getLogger
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
-
+import time
 from rasa.core.channels.channel import (
     InputChannel,
     CollectingOutputChannel,
@@ -63,6 +63,7 @@ class EnterpriseWechatChannel(InputChannel):
         while start < len(text):
             end = start + self.MAX_MESSAGE_LENGTH
             chunk = text[start:end]
+            time.sleep(0.5)
             self.wechat_client.message.send_markdown(self.agent_id, user_id, chunk)
             start = end
 
