@@ -63,7 +63,7 @@ class EnterpriseWechatChannel(InputChannel):
         while start < len(text):
             end = start + self.MAX_MESSAGE_LENGTH
             chunk = text[start:end]
-            time.sleep(0.5)
+            time.sleep(0.2)
             self.wechat_client.message.send_markdown(self.agent_id, user_id, chunk)
             start = end
 
