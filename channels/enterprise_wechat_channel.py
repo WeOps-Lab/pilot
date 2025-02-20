@@ -21,7 +21,7 @@ logger = getLogger(__name__)
 
 class EnterpriseWechatChannel(InputChannel):
     # 企业微信单条消息最大长度（以字符计）
-    MAX_MESSAGE_LENGTH = 2048
+    MAX_MESSAGE_LENGTH = 500
 
     def name(self) -> Text:
         return "enterprise_wechat"

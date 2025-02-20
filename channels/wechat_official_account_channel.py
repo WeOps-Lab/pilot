@@ -6,8 +6,6 @@ from logging import getLogger
 from typing import Dict, Optional, Text, Any, Callable, Awaitable
 
 import xmltodict
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import unpad
 from rasa.core.channels.channel import (
     InputChannel,
     CollectingOutputChannel,
@@ -26,7 +24,7 @@ logger = getLogger(__name__)
 
 
 class WechatOfficialAccountChannel(InputChannel):
-    MAX_MESSAGE_LENGTH = 1024
+    MAX_MESSAGE_LENGTH = 500
     def name(self) -> Text:
         return "wechat_official_account"
 
